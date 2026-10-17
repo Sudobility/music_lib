@@ -151,6 +151,8 @@ export function reduceNewProjectDraft(
       return { ...draft, lyrics: action.lyrics };
     case 'setLyricsTheme':
       return { ...draft, lyricsTheme: action.lyricsTheme };
+    case 'setLyricsLanguage':
+      return { ...draft, lyricsLanguage: action.lyricsLanguage };
     case 'setKey':
       return {
         ...draft,
@@ -523,6 +525,7 @@ export function newProjectRequestDraft(
     tempoText: draft.tempoText,
     lyrics: draft.lyrics,
     lyricsTheme: draft.lyricsTheme,
+    ...(draft.lyricsLanguage ? { lyricsLanguage: draft.lyricsLanguage } : {}),
   };
 }
 

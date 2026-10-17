@@ -123,6 +123,11 @@ export function complexityLabelKey(complexity: string): string {
   return `generateScore.complexityName.${complexity}`;
 }
 
+/** The locale key naming a lyric's language. */
+export function lyricsLanguageLabelKey(language: string): string {
+  return `newProject.lyricsLanguageName.${language}`;
+}
+
 /** A draft's optional choice (`''` for none) as the value a picker holds. */
 export function optionalToPicker(value: string): string {
   return value === '' ? NO_MARK : value;

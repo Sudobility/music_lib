@@ -398,6 +398,9 @@ export function buildGenerateScoreRequest(
           ...(draft.lyricsTheme?.trim()
             ? { lyricsTheme: draft.lyricsTheme.trim() }
             : {}),
+          ...(draft.lyricsLanguage
+            ? { lyricsLanguage: draft.lyricsLanguage }
+            : {}),
         }
       : {}),
     ...(tempo === undefined ? {} : { tempo }),
