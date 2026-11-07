@@ -24,7 +24,18 @@ export default defineConfig({
       fileName: () => 'index.js',
     },
     rollupOptions: {
-      external: ['immer', 'zod', '@sudobility/music_types', 'zustand'],
+      external: [
+        'immer',
+        'zod',
+        'zustand',
+        'zustand/middleware/immer',
+        '@sudobility/music_types',
+        '@sudobility/music_editing',
+        '@sudobility/music_client',
+        '@sudobility/music_codecs',
+        '@sudobility/music_player',
+        '@sudobility/music_player/core',
+      ],
       output: {
         exports: 'named',
       },

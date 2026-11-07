@@ -61,3 +61,17 @@ export * from './services/docs/resource-links';
 export * from './services/playback/unplugged';
 
 export * from './services/generation/use-generation-providers';
+
+// The shared application/document store, its injected context, persistence and
+// the player binding (moved out of the apps so web and native compose the same
+// store and share the same save path). The web app builds one app-wide store
+// (`createAppStore`/`useAppStore`); the native app builds one per document
+// (`createDocumentStore`). `bindPlayer` is the store-generic editing↔playback
+// binding; the concrete player/synth stays with the hosts.
+export * from './store/context';
+export * from './store/useAppStore';
+export * from './store/document-store';
+export * from './services/persistence/document-saver';
+export * from './services/persistence/project-ui';
+export * from './services/persistence/project-write';
+export * from './services/playback/bind-player';
