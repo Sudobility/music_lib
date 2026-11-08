@@ -23,7 +23,7 @@ export function projectWrite(
   context: StoreContext,
   projectId: () => string,
   read: () => ProjectWriteFields,
-  onSaved?: (saved: ProjectSaveResult) => void,
+  onSaved?: (saved: ProjectSaveResult) => void
 ): SaveWrite {
   return async ({ score, scoreChanged }) => {
     const { client, token } = await authorizedServer(context);

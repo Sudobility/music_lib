@@ -27,7 +27,9 @@ export type GenerationMode = 'generate' | 'regenerate';
  * than writing `state.mode` itself, so `generation-slice` stays the only
  * code that ever touches its own field.
  */
-export function deriveGenerationMode(selection: ScoreSelection): GenerationMode {
+export function deriveGenerationMode(
+  selection: ScoreSelection
+): GenerationMode {
   const hasContent =
     selection.eventIds.length > 0 ||
     selection.measureIds.length > 0 ||
@@ -57,7 +59,7 @@ export type GenerationSlice = {
 };
 
 export function createGenerationSlice(
-  context: StoreContext,
+  context: StoreContext
 ): StateCreator<AppState, [['zustand/immer', never]], [], GenerationSlice> {
   const provider = context.provider ?? new ApiGenerationProvider(context);
   return (set, get) => {
@@ -99,15 +101,15 @@ export function createGenerationSlice(
       lastRequest: null,
       error: null,
 
-      syncModeFromSelection: (selection) => {
-        set((state) => {
+      syncModeFromSelection: selection => {
+        set(state => {
           state.mode = deriveGenerationMode(selection);
         });
       },
 
-      generate: async (params) => {
+      generate: async params => {
         const { token, signal } = beginRequest();
-        set((state) => {
+        set(state => {
           state.pending = true;
           state.error = null;
         });
@@ -117,7 +119,7 @@ export function createGenerationSlice(
           // Server-side sanitize already ran (music_api); the provider re-parsed the shape.
           const score = result.score;
           get().setScore(score, { resetHistory: true });
-          set((state) => {
+          set(state => {
             state.pending = false;
             state.lastRequest = params;
           });
@@ -125,12 +127,12 @@ export function createGenerationSlice(
         } catch (error) {
           if (token !== requestToken) return; // superseded; the newer call now owns pending/error
           if (isAbortError(error)) {
-            set((state) => {
+            set(state => {
               state.pending = false;
             });
             return;
           }
-          set((state) => {
+          set(state => {
             state.pending = false;
             state.error = errorMessage(error);
           });
@@ -139,7 +141,7 @@ export function createGenerationSlice(
 
       cancel: () => {
         abortController?.abort();
-        set((state) => {
+        set(state => {
           state.pending = false;
         });
       },

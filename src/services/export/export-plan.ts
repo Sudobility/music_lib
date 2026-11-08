@@ -35,13 +35,13 @@ import type { EditingState, EditingStoreApi } from '@sudobility/music_editing';
 export function planExport<T extends EditingState>(
   store: EditingStoreApi<T>,
   format: ExportFormatId,
-  scope: ExportScope,
+  scope: ExportScope
 ): ExportPlan | null {
   const entry = WRITABLE_EXPORT_FORMATS.find(f => f.id === format);
   if (!entry) return null;
   const target = exportTargetScore(
     store,
-    entry.route === 'project' ? 'all' : scope,
+    entry.route === 'project' ? 'all' : scope
   );
   if (!target) return null;
   return {

@@ -13,7 +13,12 @@
  * Commit still goes through music_editing's `setNotePitch` from the UI, which
  * converts the shown pitch back once.
  */
-import type { NoteEvent, Pitch, PitchDisplay, Score } from '@sudobility/music_types';
+import type {
+  NoteEvent,
+  Pitch,
+  PitchDisplay,
+  Score,
+} from '@sudobility/music_types';
 import {
   NO_MARK,
   commonValue,
@@ -31,25 +36,25 @@ import { displayedPitchForNote } from '@sudobility/music_editing';
 export function noteInspectorModel(
   notes: readonly NoteEvent[],
   score: Score,
-  pitchDisplay: PitchDisplay,
+  pitchDisplay: PitchDisplay
 ) {
   const shown = (note: NoteEvent): Pitch =>
     displayedPitchForNote(score, note, pitchDisplay);
   return {
-    step: commonValue(notes.map((n) => shown(n).step)),
-    accidental: commonValue(notes.map((n) => String(shown(n).accidental))),
-    octave: commonValue(notes.map((n) => shown(n).octave)),
+    step: commonValue(notes.map(n => shown(n).step)),
+    accidental: commonValue(notes.map(n => String(shown(n).accidental))),
+    octave: commonValue(notes.map(n => shown(n).octave)),
     duration: durationFieldState(notes, score.ppq),
-    startTick: commonValue(notes.map((n) => n.startTick)),
-    velocity: commonValue(notes.map((n) => n.velocity)),
-    articulation: commonValue(notes.map((n) => n.articulation ?? NO_MARK)),
-    dynamic: commonValue(notes.map((n) => n.dynamic ?? NO_MARK)),
+    startTick: commonValue(notes.map(n => n.startTick)),
+    velocity: commonValue(notes.map(n => n.velocity)),
+    articulation: commonValue(notes.map(n => n.articulation ?? NO_MARK)),
+    dynamic: commonValue(notes.map(n => n.dynamic ?? NO_MARK)),
     trackName: commonValue(
-      notes.map((n) => findTrack(score, n.trackId)?.name ?? '?'),
+      notes.map(n => findTrack(score, n.trackId)?.name ?? '?')
     ),
-    voice: commonValue(notes.map((n) => voiceNumberOf(score, n))),
-    tieStart: commonValue(notes.map((n) => n.tieStart === true)),
-    tieStop: commonValue(notes.map((n) => n.tieStop === true)),
+    voice: commonValue(notes.map(n => voiceNumberOf(score, n))),
+    tieStart: commonValue(notes.map(n => n.tieStart === true)),
+    tieStop: commonValue(notes.map(n => n.tieStop === true)),
     graceCount: notes[0]?.graceNotes?.length ?? 0,
   };
 }

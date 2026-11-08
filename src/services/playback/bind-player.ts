@@ -157,7 +157,7 @@ function measureAt(score: Score, tick: number) {
   if (measures.length === 0) return null;
   return (
     measures.find(
-      m => tick >= m.startTick && tick < m.startTick + m.durationTicks,
+      m => tick >= m.startTick && tick < m.startTick + m.durationTicks
     ) ?? measures[measures.length - 1]!
   );
 }
@@ -165,7 +165,7 @@ function measureAt(score: Score, tick: number) {
 export function bindPlayer<T extends EditingState & Partial<TransportSettings>>(
   player: IMusicPlayer,
   store: EditingStoreApi<T>,
-  options: BindPlayerOptions = {},
+  options: BindPlayerOptions = {}
 ): PlayerBinding {
   const report = (failure: PlayerFailure, error: unknown) =>
     options.onError?.(failure, error);
@@ -193,7 +193,7 @@ export function bindPlayer<T extends EditingState & Partial<TransportSettings>>(
         scoreForPlayback(score, store.getState().unpluggedActive),
         {
           visibleTrackIds: selectVisibleTrackIds(store.getState()),
-        },
+        }
       );
     } catch (error) {
       report('scoreLoadFailed', error);
@@ -206,14 +206,14 @@ export function bindPlayer<T extends EditingState & Partial<TransportSettings>>(
         // Only the store whose score is sounding is playing. Another binding's
         // playback must not lock this store's editing as though it were.
         draft.state = ownsPlayer() ? state : 'stopped';
-      }),
+      })
     ),
     // Low-frequency and store-shaped: it reports per percent and behaves like
     // ordinary state, unlike position and the sounding set.
     player.onLoadState(state =>
       write(draft => {
         draft.synthLoad = state;
-      }),
+      })
     ),
   ];
 
@@ -245,7 +245,7 @@ export function bindPlayer<T extends EditingState & Partial<TransportSettings>>(
       ) {
         loadedScores.set(player, lastScore);
         player.applyMix(
-          playbackTracks(scoreForPlayback(lastScore, state.unpluggedActive)),
+          playbackTracks(scoreForPlayback(lastScore, state.unpluggedActive))
         );
         return;
       }
@@ -343,7 +343,7 @@ export function bindPlayer<T extends EditingState & Partial<TransportSettings>>(
           startTick: 0,
           endTick: scoreEndTick(score),
           trackIds: [],
-        },
+        }
       );
     },
     setLoopFromSelection() {

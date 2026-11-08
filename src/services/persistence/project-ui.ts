@@ -35,17 +35,17 @@ function readState(value: unknown): ProjectLocalUiState {
   }
   if (Array.isArray(record.visibleTrackIds)) {
     state.visibleTrackIds = record.visibleTrackIds.filter(
-      (id): id is string => typeof id === 'string' && id.length > 0,
+      (id): id is string => typeof id === 'string' && id.length > 0
     );
   }
   if (Array.isArray(record.mutedTrackIds)) {
     state.mutedTrackIds = record.mutedTrackIds.filter(
-      (id): id is string => typeof id === 'string' && id.length > 0,
+      (id): id is string => typeof id === 'string' && id.length > 0
     );
   }
   if (Array.isArray(record.soloTrackIds)) {
     state.soloTrackIds = record.soloTrackIds.filter(
-      (id): id is string => typeof id === 'string' && id.length > 0,
+      (id): id is string => typeof id === 'string' && id.length > 0
     );
   }
   if (
@@ -60,7 +60,7 @@ function readState(value: unknown): ProjectLocalUiState {
 
 export async function loadProjectLocalUi(
   storage: PrefsStorage | undefined,
-  projectId: string,
+  projectId: string
 ): Promise<ProjectLocalUiState> {
   if (!storage) return {};
   try {
@@ -73,7 +73,7 @@ export async function loadProjectLocalUi(
 export async function saveProjectLocalUi(
   storage: PrefsStorage | undefined,
   projectId: string,
-  state: ProjectLocalUiState,
+  state: ProjectLocalUiState
 ): Promise<void> {
   if (!storage) return;
   try {
@@ -87,7 +87,7 @@ export async function saveProjectLocalUi(
 
 export function applyProjectLocalMix(
   score: Score,
-  state: ProjectLocalUiState,
+  state: ProjectLocalUiState
 ): Score {
   const muted = new Set(state.mutedTrackIds ?? []);
   const solo = new Set(state.soloTrackIds ?? []);

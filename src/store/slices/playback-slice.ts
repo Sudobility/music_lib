@@ -48,7 +48,7 @@ export const createPlaybackSlice: StateCreator<
   [['zustand/immer', never]],
   [],
   PlaybackSlice
-> = (set) => ({
+> = set => ({
   state: 'stopped',
   loopRange: null,
   tempoMultiplier: 1,
@@ -56,33 +56,33 @@ export const createPlaybackSlice: StateCreator<
   synthLoad: { status: 'idle' },
   masterVolume: 1,
 
-  setPlaybackState: (state) => {
-    set((draft) => {
+  setPlaybackState: state => {
+    set(draft => {
       draft.state = state;
     });
   },
-  setSynthLoad: (state) => {
-    set((draft) => {
+  setSynthLoad: state => {
+    set(draft => {
       draft.synthLoad = state;
     });
   },
-  setLoopRange: (range) => {
-    set((draft) => {
+  setLoopRange: range => {
+    set(draft => {
       draft.loopRange = range;
     });
   },
-  setTempoMultiplier: (multiplier) => {
-    set((draft) => {
+  setTempoMultiplier: multiplier => {
+    set(draft => {
       draft.tempoMultiplier = multiplier;
     });
   },
-  setMetronome: (enabled) => {
-    set((draft) => {
+  setMetronome: enabled => {
+    set(draft => {
       draft.metronome = enabled;
     });
   },
-  setMasterVolume: (volume) => {
-    set((draft) => {
+  setMasterVolume: volume => {
+    set(draft => {
       draft.masterVolume = volume;
     });
   },

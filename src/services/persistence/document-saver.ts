@@ -78,7 +78,7 @@ export type DocumentSaver = {
 };
 
 export function createDocumentSaver<T extends PersistedState>(
-  options: DocumentSaverOptions<T>,
+  options: DocumentSaverOptions<T>
 ): DocumentSaver {
   const { set, get } = options;
   /**

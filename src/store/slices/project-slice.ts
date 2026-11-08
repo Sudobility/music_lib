@@ -31,7 +31,10 @@ import type { DocumentSaver } from '../../services/persistence/document-saver.js
 import { projectWrite } from '../../services/persistence/project-write.js';
 import { authorizedServer, hasServer, type StoreContext } from '../context.js';
 import type { AppState } from '../useAppStore.js';
-import { getMusicPosition, getMusicPositionSource } from '@sudobility/music_types';
+import {
+  getMusicPosition,
+  getMusicPositionSource,
+} from '@sudobility/music_types';
 import type { SaveState } from '@sudobility/music_types';
 import {
   applyProjectLocalMix,
@@ -142,11 +145,15 @@ export type ProjectSlice = {
    * history resets, and the project is clean at the server's stamp. False
    * when the project is no longer the open one.
    */
-  adoptLiveResult: (score: Score, transport: TransportStopper, result: LiveResultMeta) => boolean;
+  adoptLiveResult: (
+    score: Score,
+    transport: TransportStopper,
+    result: LiveResultMeta
+  ) => boolean;
 };
 
 export function createProjectSlice(
-  context: StoreContext,
+  context: StoreContext
 ): StateCreator<AppState, [['zustand/immer', never]], [], ProjectSlice> {
   return (set, get) => {
     let currentProject: ProjectSaveResult | null = null;
@@ -161,8 +168,12 @@ export function createProjectSlice(
       const localUi: ProjectLocalUiState = {
         zoom: get().zoom,
         visibleTrackIds: get().visibleTrackIds ?? undefined,
-        mutedTrackIds: score.tracks.filter((track) => track.muted).map((track) => track.id),
-        soloTrackIds: score.tracks.filter((track) => track.solo).map((track) => track.id),
+        mutedTrackIds: score.tracks
+          .filter(track => track.muted)
+          .map(track => track.id),
+        soloTrackIds: score.tracks
+          .filter(track => track.solo)
+          .map(track => track.id),
         cursorTick: getMusicPosition().reportedTick,
       };
       await saveProjectLocalUi(context.storage, project.id, localUi);
@@ -196,9 +207,9 @@ export function createProjectSlice(
                 () => ({
                   name: currentProject!.name,
                 }),
-                (saved) => {
+                saved => {
                   currentProject = saved;
-                },
+                }
               )
             : null,
       });
@@ -231,7 +242,10 @@ export function createProjectSlice(
      * one: creating a project echoes back everything except the score the
      * caller just sent, so the caller supplies the copy it already has.
      */
-    async function adopt(project: ProjectSaveResult, score: Score): Promise<void> {
+    async function adopt(
+      project: ProjectSaveResult,
+      score: Score
+    ): Promise<void> {
       await flushOutgoing();
       positionUnsubscribe?.();
       const localUi = await loadProjectLocalUi(context.storage, project.id);
@@ -247,7 +261,8 @@ export function createProjectSlice(
         for (let pass = 0; pass < 16; pass += 1) {
           const repair = repairScore(localScore);
           localScore = repair.score;
-          if (Object.keys(repair.fixed).length > 0) repairedGeneratedScore = true;
+          if (Object.keys(repair.fixed).length > 0)
+            repairedGeneratedScore = true;
           if (
             Object.keys(repair.remaining).length === 0 ||
             Object.keys(repair.fixed).length === 0
@@ -257,7 +272,7 @@ export function createProjectSlice(
         }
       }
       attachAutosaver(localScore);
-      set((state) => {
+      set(state => {
         state.projectId = project.id;
         state.projectName = project.name;
         state.lastGeneration = project.lastGeneration ?? null;
@@ -294,7 +309,7 @@ export function createProjectSlice(
       serverUpdatedAt: null,
       serverAvailable: hasServer(context),
 
-      newProject: async (input) => {
+      newProject: async input => {
         // `newProjectScore`, not a bare empty score: a project always opens
         // with a track to write on. See its own doc for why that is policy
         // here rather than in the factory.
@@ -306,7 +321,7 @@ export function createProjectSlice(
             score: projectScoreForServer(score),
             ...(input.origin ? { origin: input.origin } : {}),
           },
-          token,
+          token
         );
         // The score we just sent, not one shipped back to us: the server
         // stored exactly this, and re-downloading it would double the cost of
@@ -314,7 +329,7 @@ export function createProjectSlice(
         await adopt(created, score);
       },
 
-      openProject: async (id) => {
+      openProject: async id => {
         /*
           No "is it loading" flag here, deliberately.
 
@@ -340,7 +355,7 @@ export function createProjectSlice(
       },
 
       markDirty: () => {
-        set((state) => {
+        set(state => {
           state.dirty = true;
           state.saveState = 'unsaved';
         });
@@ -349,23 +364,24 @@ export function createProjectSlice(
 
       localUiChanged: scheduleLocalUiSave,
 
-      noteServerVersion: (updatedAt) => {
-        set((state) => {
+      noteServerVersion: updatedAt => {
+        set(state => {
           state.serverUpdatedAt = updatedAt;
         });
       },
 
-      renameProject: (name) => {
+      renameProject: name => {
         if (!currentProject) return;
         currentProject = { ...currentProject, name };
-        set((state) => {
+        set(state => {
           state.projectName = name;
         });
         get().markDirty();
       },
 
       applyLiveScore: (score, meta) => {
-        if (!currentProject || currentProject.id !== meta.projectId) return false;
+        if (!currentProject || currentProject.id !== meta.projectId)
+          return false;
         // Play is disabled while a job runs; this is the guard behind it. A
         // score swapped under a running player is read as a mix change, and
         // the old music goes on playing out of its queue.
@@ -374,10 +390,14 @@ export function createProjectSlice(
         // A snapshot is a new document as far as undo goes; a partial is the
         // same one with more written, and the caret stays where the reader
         // left it either way.
-        get().setScore(mixed, { resetHistory: meta.reason === 'snapshot', resetPosition: false });
+        get().setScore(mixed, {
+          resetHistory: meta.reason === 'snapshot',
+          resetPosition: false,
+        });
         autosaver?.adopted(get().score ?? mixed);
-        set((state) => {
-          if (meta.serverUpdatedAt) state.serverUpdatedAt = meta.serverUpdatedAt;
+        set(state => {
+          if (meta.serverUpdatedAt)
+            state.serverUpdatedAt = meta.serverUpdatedAt;
           state.dirty = false;
           state.saveState = 'saved';
         });
@@ -385,7 +405,8 @@ export function createProjectSlice(
       },
 
       adoptLiveResult: (score, transport, result) => {
-        if (!currentProject || currentProject.id !== result.projectId) return false;
+        if (!currentProject || currentProject.id !== result.projectId)
+          return false;
         // Stop first: this write bypasses the edit lock, and a controller
         // still running would read the new score as a mix change.
         transport.stop();
@@ -395,15 +416,22 @@ export function createProjectSlice(
         currentProject = {
           ...currentProject,
           updatedAt: result.serverUpdatedAt,
-          ...(result.lastGeneration ? { lastGeneration: result.lastGeneration } : {}),
+          ...(result.lastGeneration
+            ? { lastGeneration: result.lastGeneration }
+            : {}),
         };
-        set((state) => {
+        set(state => {
           state.serverUpdatedAt = result.serverUpdatedAt;
-          if (result.lastGeneration) state.lastGeneration = result.lastGeneration;
+          if (result.lastGeneration)
+            state.lastGeneration = result.lastGeneration;
           // The same rule the server applied to the row, so a project that
           // was blank a moment ago reads as generated without a re-read.
           if (result.job) {
-            state.origin = originAfterJob(state.origin, result.job.kind, result.job.id);
+            state.origin = originAfterJob(
+              state.origin,
+              result.job.kind,
+              result.job.id
+            );
           }
           state.dirty = false;
           state.saveState = 'saved';
