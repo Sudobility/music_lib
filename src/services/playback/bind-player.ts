@@ -34,7 +34,7 @@ import type {
   ScoreRange,
   TransportSettings,
 } from '@sudobility/music_types';
-import type { IMusicPlayer } from '@sudobility/music_player/core';
+import type { IMusicPlayer } from '@sudobility/music_types';
 import { playbackTracks } from '@sudobility/music_player/core';
 import { selectVisibleTrackIds } from '@sudobility/music_editing';
 import type { EditingState, EditingStoreApi } from '@sudobility/music_editing';

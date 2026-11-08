@@ -75,3 +75,8 @@ export * from './services/persistence/document-saver';
 export * from './services/persistence/project-ui';
 export * from './services/persistence/project-write';
 export * from './services/playback/bind-player';
+
+// The shared route registry both apps are built on (names, paths, param shapes),
+// plus the `Navigator` contract type. Pure, framework-agnostic — the apps bind
+// their own navigator (react-router / react-navigation) to it and extend it.
+export * from './routing/routes';

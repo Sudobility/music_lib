@@ -3,6 +3,7 @@
   "version": "1.9.85",
   "description": "Platform-free business logic for ScoreSmith: domain services, generation, persistence rules, and preferences",
   "type": "module",
+  "sideEffects": false,
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
@@ -45,6 +46,7 @@
     "@sudobility/music_editing": "^0.0.63",
     "@sudobility/music_player": "^0.1.82",
     "@sudobility/music_types": "^0.13.62",
+    "@sudobility/routing": "^0.0.1",
     "immer": "^10.0.0 || ^11.0.0",
     "zustand": ">=5"
   },
@@ -55,6 +57,7 @@
     "@sudobility/music_editing": "^0.0.63",
     "@sudobility/music_player": "^0.1.82",
     "@sudobility/music_types": "^0.13.62",
+    "@sudobility/routing": "^0.0.1",
     "@types/jsdom": "~30.0.0",
     "@types/node": "~26.6.5",
     "@typescript-eslint/eslint-plugin": "~8.72.0",

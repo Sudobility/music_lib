@@ -88,24 +88,29 @@ describe('music_lib is platform-free', () => {
       declares what it needs as peers — the app installs one copy of each —
       so there is no `dependencies` block at all.
 
-      `music_codecs` and `music_drawing` are siblings, not platforms: the
-      note-file codecs and the canvas renderer, both of which this package used
-      to carry its own copy of. **`vexflow` is gone entirely** — it left with
-      the renderer, so a consumer that only wants business logic no longer
-      installs a drawing engine.
-      Both it and `music_types` are free of anything platform-shaped by their
-      own guard tests, so depending on them cannot smuggle one in here.
+      The `@sudobility` siblings here are the shared halves this package
+      composes, not platforms: `music_client` (the typed network client and its
+      React Query hooks), `music_codecs` (the note-file codecs), `music_editing`
+      (the editing slices the document store is built from) and `music_types`
+      (the model and pure helpers). Each is free of anything platform-shaped by
+      its own guard tests, so depending on them cannot smuggle audio, MIDI or the
+      DOM in here.
 
       `music_player` *does* carry engines — an `AudioWorklet` on the web, native
       audio on React Native — which is why this package imports it only through
       its `/core` subpath: the interface, the singleton and the pure plan
       builders, with nothing that makes a sound. Importing its root would
-      resolve to the web entry and make this assertion false. That is asserted
-      directly below.
+      resolve to the web entry and put an engine in a package whose whole point
+      is that it has none. That is asserted directly below.
     */
     expect(dependencies).toBeUndefined();
     expect(Object.keys(peerDependencies).sort()).toEqual([
+      '@sudobility/music_client',
+      '@sudobility/music_codecs',
+      '@sudobility/music_editing',
+      '@sudobility/music_player',
       '@sudobility/music_types',
+      '@sudobility/routing',
       'immer',
       'zustand',
     ]);
