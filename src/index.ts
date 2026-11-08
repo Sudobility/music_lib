@@ -78,6 +78,9 @@ export * from './services/playback/bind-player';
 // Export planning — which score a scope writes, decided before any bytes.
 // Shared by both apps (web + native) so the format menu cannot drift.
 export * from './services/export/export-plan';
+// Inspector view-models — the "Mixed"-aware field derivations both apps' panels
+// show, derived once here rather than rebuilt inline in each.
+export * from './services/inspector/note-model';
 
 // The shared route registry both apps are built on (names, paths, param shapes),
 // plus the `Navigator` contract type. Pure, framework-agnostic — the apps bind
