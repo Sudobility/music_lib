@@ -75,6 +75,9 @@ export * from './services/persistence/document-saver';
 export * from './services/persistence/project-ui';
 export * from './services/persistence/project-write';
 export * from './services/playback/bind-player';
+// Export planning — which score a scope writes, decided before any bytes.
+// Shared by both apps (web + native) so the format menu cannot drift.
+export * from './services/export/export-plan';
 
 // The shared route registry both apps are built on (names, paths, param shapes),
 // plus the `Navigator` contract type. Pure, framework-agnostic — the apps bind
