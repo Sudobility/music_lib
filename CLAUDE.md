@@ -11,8 +11,11 @@ writes, the player binding (`bindPlayer`) and playback adapter, export planning
 (`DOCS_TOPICS`, `RESOURCE_GROUPS`), generation request builders/drafts, credits,
 device prefs (theme, developer mode + settings, keyboard, font size, language,
 last generation provider; `resolveThemeMode`) and host copy wiring. It
-**re-exports `music_types`, `music_editing`, `music_codecs` and `music_drawing`
-wholesale**, so an app imports one package.
+**re-exports `music_types` wholesale** (`export * from '@sudobility/music_types'`
+in `src/index.ts`) — model, commands, vocabulary, schemas — so apps get them from
+this package too. `music_editing`, `music_codecs` and `music_player/core` are
+composed internally (imported, not re-exported); the renderer (`music_drawing`)
+and audio engines (`music_player`) are composed by the hosts, not by this package.
 
 Every shared type and closed vocabulary is music_types'; every operation that
 changes a score is music_editing's. There is no domain code here — the model,
@@ -28,8 +31,10 @@ are re-exported.
 - `bun run build` — `tsc` typechecks (`noEmit`), `vite build` emits the single bundled `dist/index.js`
 
 TypeScript strict, ESM, **extensionless source imports** (entity_pages' convention,
-not the `.js`-suffixed one most of the family uses). Published to npm (restricted)
-via CI on push to main. Everything exports from `src/index.ts` (package-root import only).
+not the `.js`-suffixed one most of the family uses). Published to **GitHub
+Packages** (`npm.pkg.github.com`, `@sudobility` scope — see `.npmrc`) via CI
+(`.github/workflows/ci-cd.yml`, `publish-target: github`) on push to main.
+Everything exports from `src/index.ts` (package-root import only).
 
 ## Architecture rules
 
@@ -44,9 +49,10 @@ via CI on push to main. Everything exports from `src/index.ts` (package-root imp
 - **This package is platform-free; five guard tests keep it so**
   (`src/platform/no-platform-imports.test.ts`): no `tone`/`@tonejs/midi`, no
   platform runtime dep, no web-only global outside the canvas renderer, no
-  `import.meta`, no `Worker`. Runtime deps are exactly `music_codecs`,
-  `music_drawing`, `music_player` (through **`/core` only** — the root entry
-  constructs a synth), `immer`, `zod`. The guards grep raw source (comments
+  `import.meta`, no `Worker`. There is **no `dependencies` block**; peers are
+  exactly `music_client`, `music_codecs`, `music_editing`, `music_player`
+  (imported through **`/core` only** — the root entry constructs a synth),
+  `music_types`, `@sudobility/routing`, `immer`, `zustand`. The guards grep raw source (comments
   stripped), because every test runs in jsdom where the offending import works —
   the breakage only appears in a React Native bundle.
 - **`import.meta` is syntax, not a value** — RN's bundler transforms to CommonJS
