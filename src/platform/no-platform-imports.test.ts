@@ -111,6 +111,7 @@ describe('music_lib is platform-free', () => {
       '@sudobility/music_player',
       '@sudobility/music_types',
       '@sudobility/routing',
+      '@sudobility/types',
       'immer',
       'zustand',
     ]);

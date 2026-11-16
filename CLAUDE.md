@@ -52,7 +52,7 @@ Everything exports from `src/index.ts` (package-root import only).
   `import.meta`, no `Worker`. There is **no `dependencies` block**; peers are
   exactly `music_client`, `music_codecs`, `music_editing`, `music_player`
   (imported through **`/core` only** — the root entry constructs a synth),
-  `music_types`, `@sudobility/routing`, `immer`, `zustand`. The guards grep raw source (comments
+  `music_types`, `@sudobility/types`, `@sudobility/routing`, `immer`, `zustand`. The guards grep raw source (comments
   stripped), because every test runs in jsdom where the offending import works —
   the breakage only appears in a React Native bundle.
 - **`import.meta` is syntax, not a value** — RN's bundler transforms to CommonJS
