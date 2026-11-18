@@ -33,7 +33,6 @@ import type {
   Score,
   ScoreRange,
   TransportSettings,
-  UnpluggedListener,
 } from '@sudobility/music_types';
 import type { IMusicPlayer } from '@sudobility/music_types';
 import { playbackTracks } from '@sudobility/music_player/core';
@@ -65,23 +64,6 @@ function scoreForPlayback(score: Score, unpluggedActive: boolean): Score {
       const mix = mixes[track.id];
       return mix ? { ...track, volume: mix.volume, pan: mix.pan } : track;
     }),
-  };
-}
-
-/**
- * The score with its Unplugged listener replaced by `listener`, the saved
- * arrangement otherwise untouched — the shape `scoreForPlayback` then turns
- * into a mix. Used for a *previewed* listener position (the auto-moving
- * stage) that is heard but never written to the document, so the real score
- * and its undo history are never touched.
- */
-function scoreWithListener(score: Score, listener: UnpluggedListener): Score {
-  return {
-    ...score,
-    unplugged: {
-      listener,
-      tracks: score.unplugged?.tracks ?? {},
-    },
   };
 }
 
@@ -238,7 +220,6 @@ export function bindPlayer<T extends EditingState & Partial<TransportSettings>>(
   let lastScore: Score | null = store.getState().score;
   let lastVisible = store.getState().visibleTrackIds;
   let lastUnpluggedActive = store.getState().unpluggedActive;
-  let lastListenerPreview = store.getState().unpluggedListenerPreview;
   if (lastScore && audioActivated) void load(lastScore);
 
   const offStore = store.subscribe(state => {
@@ -287,30 +268,6 @@ export function bindPlayer<T extends EditingState & Partial<TransportSettings>>(
     if (state.unpluggedActive !== lastUnpluggedActive) {
       lastUnpluggedActive = state.unpluggedActive;
       if (ownsPlayer() && state.score && audioActivated) void load(state.score);
-    }
-    // The auto-moving ("Wander") stage previews a listener position the score
-    // never records: it is heard but not written. Push the mix it implies
-    // straight to the engine — the same live `applyMix` a drag does (see the
-    // score branch above), but from `unpluggedListenerPreview` rather than a
-    // committed `score.unplugged` change, so it reaches the ear without an
-    // undo entry or an autosave. `null` reverts to the committed arrangement.
-    // Only while Unplugged is the active mix, and only on this store's own
-    // player — otherwise the player holds a plain, non-Unplugged mix that a
-    // preview has no business overwriting.
-    if (state.unpluggedListenerPreview !== lastListenerPreview) {
-      const preview = state.unpluggedListenerPreview;
-      lastListenerPreview = preview;
-      if (
-        audioActivated &&
-        state.unpluggedActive &&
-        state.score &&
-        ownsPlayer()
-      ) {
-        const mixSource = preview
-          ? scoreWithListener(state.score, preview)
-          : state.score;
-        player.applyMix(playbackTracks(scoreForPlayback(mixSource, true)));
-      }
     }
   });
 
